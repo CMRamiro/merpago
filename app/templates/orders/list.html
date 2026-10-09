@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Pedidos - MerPago{% endblock %}
+{% block content %}
+<div class="card-head">
+    <h1>Mis pedidos</h1>
+    <a class="btn btn-primary" href="{{ url_for('orders.create_order') }}">Nuevo pedido</a>
+</div>
+
+{% if orders %}
+<table class="table">
+    <thead>
+        <tr><th>Referencia</th><th>Cliente</th><th>Tipo</th><th>Total</th><th>Pagado</th><th>Estado</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.reference }}</td>
+            <td>{{ order.customer_name }}</td>
+            <td><span class="tag">{{ order.order_type }}</span></td>
+            <td>{{ "%.2f"|format(order.total) }}</td>
+            <td>{{ "%.2f"|format(order.amount_paid) }}</td>
+            <td>{{ status_badge(order.status) }}</td>
+            <td class="actions">
+                <a class="btn btn-sm btn-outline" href="{{ url_for('orders.order_detail', order_id=order.id) }}">Ver</a>
+                {% if order.status == 'pendiente' %}
+                <a class="btn btn-sm btn-primary" href="{{ url_for('payments.checkout', order_id=order.id) }}">Pagar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="muted">No tiene pedidos. <a href="{{ url_for('orders.create_order') }}">Cree uno</a>.</p>
+{% endif %}
+{% endblock %}

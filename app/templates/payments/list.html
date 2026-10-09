@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Pagos - MerPago{% endblock %}
+{% block content %}
+<h1>Pagos y cobros</h1>
+
+{% if payments %}
+<table class="table">
+    <thead>
+        <tr><th>Referencia</th><th>Pedido</th><th>Metodo</th><th>Importe</th><th>Estado</th><th>Fecha</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for p in payments %}
+        <tr>
+            <td>{{ p.reference }}</td>
+            <td>{{ p.order.reference }}</td>
+            <td>{{ p.method }}</td>
+            <td>{{ "%.2f"|format(p.amount|float) }}</td>
+            <td>{{ status_badge(p.status) }}</td>
+            <td>{{ p.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+            <td><a class="btn btn-sm btn-outline" href="{{ url_for('payments.receipt', payment_id=p.id) }}">Comprobante</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="muted">No hay pagos registrados.</p>
+{% endif %}
+{% endblock %}

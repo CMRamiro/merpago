@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Procesar pago - MerPago{% endblock %}
+{% block content %}
+<div class="checkout-grid">
+    <div class="card form-card">
+        <h1>Simulador de pago</h1>
+        <form method="post" novalidate id="payment-form">
+            {{ form.hidden_tag() }}
+            {{ field(form.amount, "0.00") }}
+            {{ field(form.method) }}
+
+            <div id="card-fields">
+                {{ field(form.card_number, "4111 1111 1111 1111") }}
+                {{ field(form.card_holder, "Nombre del titular") }}
+                <div class="grid-two">
+                    {{ field(form.card_expiry, "MM/AA") }}
+                    {{ field(form.card_cvv, "123") }}
+                </div>
+            </div>
+
+            {{ field(form.force_result) }}
+
+            <div class="form-actions">
+                {{ form.submit(class="btn btn-primary btn-block") }}
+                <a class="btn btn-outline" href="{{ url_for('orders.order_detail', order_id=order.id) }}">Cancelar</a>
+            </div>
+        </form>
+        <p class="muted small">
+            Tarjetas de prueba: <code>4111 1111 1111 1111</code> (aprobada),
+            <code>4000 0000 0000 0002</code> (rechazada),
+            <code>4444 3333 2222 1111</code> (pendiente de Luhn).
+        </p>
+    </div>
+
+    <aside class="card order-summary">
+        <h2>Resumen del pedido</h2>
+        <p><strong>Referencia:</strong> {{ order.reference }}</p>
+        <p><strong>Cliente:</strong> {{ order.customer_name }}</p>
+        <ul class="list">
+            {% for item in order.items %}
+            <li>
+                <span>{{ item.product.name if item.product else "Producto" }} x{{ item.quantity }}</span>
+                <span>{{ "%.2f"|format(item.subtotal) }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="total-row">
+            <strong>Total</strong>
+            <strong>{{ "%.2f"|format(order.total) }}</strong>
+        </div>
+    </aside>
+</div>
+
+<script>
+const methodSelect = document.getElementById('method');
+const cardFields = document.getElementById('card-fields');
+function updateCardFields() {
+    cardFields.style.display = methodSelect.value === 'tarjeta' ? 'block' : 'none';
+}
+methodSelect.addEventListener('change', updateCardFields);
+updateCardFields();
+</script>
+{% endblock %}

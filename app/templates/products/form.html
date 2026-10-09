@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}{{ title }} - MerPago{% endblock %}
+{% block content %}
+<div class="card form-card">
+    <h1>{{ title }}</h1>
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ field(form.name, "Ej. Plan mensual") }}
+        {{ field(form.description, "Descripcion opcional") }}
+        {{ field(form.price, "0.00") }}
+        {{ field(form.stock, "0") }}
+        <div class="form-actions">
+            {{ form.submit(class="btn btn-primary") }}
+            <a class="btn btn-outline" href="{{ url_for('products.list_products') }}">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

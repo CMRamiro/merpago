@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Nuevo pedido - MerPago{% endblock %}
+{% block content %}
+<div class="card form-card">
+    <h1>Nuevo pedido</h1>
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ field(form.customer_name, "Nombre del cliente") }}
+        {{ field(form.order_type) }}
+
+        <h3 class="section-title">Productos</h3>
+        {% if products %}
+        <table class="table">
+            <thead>
+                <tr><th>Seleccionar</th><th>Producto</th><th>Precio</th><th>Stock</th><th>Cantidad</th></tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td><input type="checkbox" name="selected_{{ product.id }}" value="1"
+                               onchange="toggleRow(this, {{ product.id }})"></td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ "%.2f"|format(product.price_float) }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>
+                        <input type="number" name="qty_{{ product.id }}" id="qty_{{ product.id }}"
+                               class="qty-input" min="0" max="{{ product.stock }}" value="0" disabled>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="muted">Necesita <a href="{{ url_for('products.create_product') }}">crear productos</a> antes de armar un pedido.</p>
+        {% endif %}
+
+        {{ field(form.notes, "Notas internas (opcional)") }}
+
+        <div class="form-actions">
+            {{ form.submit(class="btn btn-primary") }}
+            <a class="btn btn-outline" href="{{ url_for('orders.list_orders') }}">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleRow(checkbox, id) {
+    const qty = document.getElementById('qty_' + id);
+    qty.disabled = !checkbox.checked;
+    if (checkbox.checked && qty.value === '0') {
+        qty.value = 1;
+    }
+    if (!checkbox.checked) {
+        qty.value = 0;
+    }
+}
+</script>
+{% endblock %}

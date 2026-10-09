@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Productos - MerPago{% endblock %}
+{% block content %}
+<div class="card-head">
+    <h1>Mis productos</h1>
+    <a class="btn btn-primary" href="{{ url_for('products.create_product') }}">Nuevo producto</a>
+</div>
+
+{% if products %}
+<table class="table">
+    <thead>
+        <tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Creado</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>
+                <strong>{{ product.name }}</strong>
+                {% if product.description %}<div class="muted small">{{ product.description }}</div>{% endif %}
+            </td>
+            <td>{{ "%.2f"|format(product.price_float) }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.created_at.strftime("%Y-%m-%d") }}</td>
+            <td class="actions">
+                <a class="btn btn-sm btn-outline" href="{{ url_for('products.edit_product', product_id=product.id) }}">Editar</a>
+                <form method="post" action="{{ url_for('products.delete_product', product_id=product.id) }}"
+                      onsubmit="return confirm('¿Eliminar este producto?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-danger" type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="muted">No tiene productos. <a href="{{ url_for('products.create_product') }}">Cree uno</a>.</p>
+{% endif %}
+{% endblock %}

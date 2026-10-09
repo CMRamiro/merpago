@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Inicio - MerPago{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Simulador de Pago/Cobro</h1>
+    <p>
+        Gestione productos, cree pedidos y procese pagos o cobros simulados.
+        Una aplicacion web de demostracion construida con Flask, SQLAlchemy,
+        Flask-WTF y Flask-Login.
+    </p>
+    <div class="hero-actions">
+        {% if current_user.is_authenticated %}
+            <a class="btn btn-primary" href="{{ url_for('main.dashboard') }}">Ir al panel</a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Crear cuenta</a>
+            <a class="btn btn-outline" href="{{ url_for('auth.login') }}">Iniciar sesion</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="features">
+    <div class="card">
+        <h3>Productos</h3>
+        <p>Cree, edite y elimine los articulos que desea vender o cobrar.</p>
+    </div>
+    <div class="card">
+        <h3>Pedidos</h3>
+        <p>Arme pedidos con varios productos y controle su estado.</p>
+    </div>
+    <div class="card">
+        <h3>Pagos y cobros</h3>
+        <p>Procese pagos con tarjeta, transferencia o efectivo en modo simulacion.</p>
+    </div>
+</section>
+{% endblock %}

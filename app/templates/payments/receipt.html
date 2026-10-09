@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_badge %}
+{% block title %}Comprobante {{ payment.reference }} - MerPago{% endblock %}
+{% block content %}
+<div class="card receipt">
+    <div class="receipt-head">
+        <h1>Comprobante de pago</h1>
+        {{ status_badge(payment.status) }}
+    </div>
+    <table class="table plain">
+        <tbody>
+            <tr><th>Referencia de pago</th><td>{{ payment.reference }}</td></tr>
+            <tr><th>Pedido</th><td>{{ payment.order.reference }}</td></tr>
+            <tr><th>Cliente</th><td>{{ payment.order.customer_name }}</td></tr>
+            <tr><th>Metodo</th><td>{{ payment.method }}</td></tr>
+            {% if payment.card_last4 %}
+            <tr><th>Tarjeta</th><td>**** **** **** {{ payment.card_last4 }}</td></tr>
+            {% endif %}
+            <tr><th>Importe</th><td><strong>{{ "%.2f"|format(payment.amount|float) }}</strong></td></tr>
+            <tr><th>Estado</th><td>{{ payment.status }}</td></tr>
+            <tr><th>Mensaje</th><td>{{ payment.message }}</td></tr>
+            <tr><th>Fecha</th><td>{{ payment.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td></tr>
+        </tbody>
+    </table>
+    <div class="form-actions">
+        <a class="btn btn-primary" href="{{ url_for('orders.order_detail', order_id=payment.order.id) }}">Ver pedido</a>
+        <a class="btn btn-outline" href="{{ url_for('payments.list_payments') }}">Todos los pagos</a>
+    </div>
+</div>
+{% endblock %}

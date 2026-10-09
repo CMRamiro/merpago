@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MerPago - Simulador de Pago/Cobro{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-inner">
+            <a class="brand" href="{{ url_for('main.index') }}">MerPago</a>
+            <nav class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.dashboard') }}">Panel</a>
+                    <a href="{{ url_for('products.list_products') }}">Productos</a>
+                    <a href="{{ url_for('orders.list_orders') }}">Pedidos</a>
+                    <a href="{{ url_for('payments.list_payments') }}">Pagos</a>
+                    <span class="user-chip">{{ current_user.name }}</span>
+                    <a class="btn btn-outline" href="{{ url_for('auth.logout') }}">Salir</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Iniciar sesion</a>
+                    <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Registrarse</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            MerPago &mdash; Simulador de pago/cobro con Flask. Proyecto educativo.
+        </div>
+    </footer>
+</body>
+</html>

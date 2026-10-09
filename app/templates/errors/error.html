@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }} - MerPago{% endblock %}
+{% block content %}
+<div class="card error-card">
+    <h1 class="error-code">{{ code }}</h1>
+    <p>{{ message }}</p>
+    <a class="btn btn-primary" href="{{ url_for('main.index') }}">Volver al inicio</a>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}Iniciar sesion - MerPago{% endblock %}
+{% block content %}
+<div class="auth-card card">
+    <h1>Iniciar sesion</h1>
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        {{ field(form.email, "tu@correo.com") }}
+        {{ field(form.password) }}
+        <div class="form-check">
+            {{ form.remember() }} {{ form.remember.label }}
+        </div>
+        {{ form.submit(class="btn btn-primary btn-block") }}
+    </form>
+    <p class="muted center">¿No tiene cuenta? <a href="{{ url_for('auth.register') }}">Registrese</a></p>
+</div>
+{% endblock %}
